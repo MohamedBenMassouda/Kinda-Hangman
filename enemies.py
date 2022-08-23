@@ -66,7 +66,7 @@ else:
     guess = ""
     guessin = "_" * word_len
     print(guessin)
-    print(word)  # Remove this later
+    
     while guess != word:
         guess = input("Guess a letter from the word : ")
 
@@ -88,9 +88,9 @@ else:
             print("You damaged the enemy. The enemy has", enemy_health, "hp left")
 
             indices = [i for i, letter in enumerate(word) if letter == guess]  # the correct word replace _ in guessin
-            word_as_list = list(guessin)  # figure it out on your own
-            for index in indices:  # figure it out on your own
-                word_as_list[index] = guess  # figure it out on your own
+            word_as_list = list(guessin)  
+            for index in indices:  
+                word_as_list[index] = guess  
 
             guessin = "".join(word_as_list)
 
@@ -129,6 +129,3 @@ else:
             print("Your word was ", guessin)
             exit()
 
-# when the letter is guessed you can still guess it and it will damage the enemy
-# connect the two programs to make the game more enjoyable
-# when the player has an item it gives him a special power according to the item
