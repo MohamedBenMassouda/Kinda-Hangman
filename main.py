@@ -1,79 +1,134 @@
-print("Welcome to my shop.")
-answer = input("Would you like to buy something : ")
+import random
+from main import item_upper
+from words import words_list
+
+
+player_health = 100
+print("The enemy is challenging you to a fight.")
+print("Note if you deny the fight you will lose 40hp")
+answer = input("Do you accept it: ")
 answer_upper = answer.upper()
 
-gold = 500
+if item_upper == "POTION":
+    from main import num
 
-if answer_upper == "YES":
-    detail = input("Do you want to know the special ability of each item? ")
-    detail_upper = detail.upper()
-    item = input("What would you like to buy sword or dagger or a potion or a shield : ")
-    item_upper = item.upper()
-    if detail_upper == "YES":
-        if item_upper == "SWORD":
-            print("The sword grants his user strength and does double the damage to the enemy.")
+    potion = num
+
+
+def gues(x):
+    a = False
+    for i in range(1, word_len):
+        if x in list(word):
+            guessin.replace("_", guess)
+            a = True
+
+        else:
+            a = False
+
+    return a, guessin
+
+
+if answer_upper == "NO":
+    print("You denied the challenge.")
+    if player_health > 40:
+        if item_upper == "SHIELD":
+            print("The shield secret ability is activated")
+            player_health -= 20
 
         elif item_upper == "DAGGER":
-            print("The dagger grants his user a special ability of dodging or reducing the damage at the same time "
-                  "dealing more damage than normal")
-
-        elif item_upper == "SHIELD":
-            print("The shield grants his user ability of reducing the damage of the enemy")
-
+            print("You hold the dagger.")
+            print("Damage is going to be reduced.")
+            player_health -= random.randint(0, 35)
         else:
-            print("The potion heals the user when he is on a certain hp. 1 potion heals 20hp")
+            player_health -= 40
+        print("You have", player_health, "hp remaining.")
 
     else:
-        pass
-
-    if item_upper == "SWORD":
-        print("The sword cost 100gold")
-        agreed = input("Do you want it?")
-        agreed_upper = agreed.upper()
-        if agreed_upper == "YES":
-            gold = gold - 100
-            print("Now you have the sword in your inventory")
-            print("Your remaining gold is", gold)
-        else:
-            exit()
-
-    elif item_upper == "DAGGER":
-        print("The dagger cost 100gold")
-        print("Do you want it?")
-        agreed = input()
-        agreed_upper = agreed.upper()
-        if agreed_upper == "YES":
-            gold = gold - 100
-            print("Now you have the dagger in your inventory")
-            print("Your remaining gold is", gold)
-        else:
-            exit()
-
-    elif item_upper == "POTION":
-        print("The potion cost 50gold")
-        agreed = input("Do you want it?")
-        num = int(input("How many potions do you want?"))
-        agreed_upper = agreed.upper()
-        if agreed_upper == "YES" and 1 <= num <= 10:
-            gold = gold - (50 * num)
-            print("Now you have the", num, "potion in your inventory")
-            print("Your remaining gold is", gold)
-        else:
-            exit()
-
-    elif item_upper == "SHIELD":
-        print("The shield cost 500gold")
-        print("Do you want it?")
-        agreed = input()
-        agreed_upper = agreed.upper()
-        if agreed_upper == "YES":
-            gold = gold - 500
-            print("Now you have the shield in your inventory")
-            print("Your remaining gold is", gold)
-        else:
-            exit()
+        print("You died.")
 
 else:
-    exit()
+    print("You agreed to fight.")
+    print("There's no coming back.")
+    choose = input("Do you want to pick the word? ")
+    if choose.upper() == "YES":
+        numm = int(input("Pick a number between 0 and 2465: "))
+        while numm > len(words_list):
+            numm = int(input("Pick a number between 0 and 2465: "))
 
+        word = words_list[numm]
 
+    else:
+        word = random.choice(words_list)
+        while not (word.isalpha()):
+            word = random.choice(words_list)
+
+    word_len = len(word)
+    guessed_letters = [word[0]]
+    enemy_health = word_len * 10 - 10
+    print("You need to guess the word correctly.")
+    print("You have", player_health, "hp.")
+    print("Your hint: The first letter of the word is", word[0])
+    guess = ""
+    guessin = "_" * word_len
+    print(guessin)
+    
+    while guess != word:
+        guess = input("Guess a letter from the word : ")
+
+        if guess in guessed_letters:
+            print("You already guessed the letter", guess)
+            print("This is what you guessed so far", guessed_letters)
+
+        elif gues(guess):
+            if item_upper == "SWORD":
+                enemy_health -= 20
+
+            elif item_upper == "DAGGER":
+                enemy_health -= 15
+
+            else:
+                enemy_health -= 10
+            print("Good job you guessed it correctly.")
+            print("You damaged the enemy. The enemy has", enemy_health, "hp left")
+
+            indices = [i for i, letter in enumerate(word) if letter == guess]  # the correct word replace _ in guessin
+            word_as_list = list(guessin)  
+            for index in indices:  
+                word_as_list[index] = guess  
+
+            guessin = "".join(word_as_list)
+
+        elif len(guess) == len(word):
+            print(guessin)
+            guessed_letters.append(guess)
+
+        else:
+            if item_upper == "SHIELD":
+                player_health -= 5
+
+            elif item_upper == "DAGGER":
+                player_health -= random.randint(0, 8)
+
+            else:
+                player_health -= 10
+            print("You guessed incorrectly. Try again")
+            print("You have", player_health, "hp remaining.")
+            guessed_letters.append(guess)
+
+        if player_health <= 20 and item_upper == "POTION" and potion:
+            print("The potion was used automatically.")
+            player_health += 20
+            print(player_health)
+            potion -= 1
+
+        if player_health <= 0:
+            print("You died.")
+            exit()
+
+        else:
+            pass
+
+        if enemy_health <= 0 or guess == word:
+            print("You killed the enemy")
+            print("Your word was ", guessin)
+            exit()
